@@ -10,10 +10,11 @@ import UIKit
 import Parse
 
 class ChatViewController: UIViewController {
+    
+    var messages = [PFObject]()
 
     @IBOutlet weak var chatTextField: UITextField!
     @IBOutlet weak var tableView: UITableView!
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,27 +27,30 @@ class ChatViewController: UIViewController {
     
     func onTimer() {
         
-//        var query = PFQuery(className:"Message")
-//        query.includeKey("text")
-//        //query.whereKey("text", equalTo:"Sean Plott")
-//        query.findObjectsInBackground {
-//        //query.findObjectsInBackgroundWithBlock {
-//            (objects: [PFObject]?, error: NSError?) -> Void in
-//            
-//            if error == nil {
-//                // The find succeeded.
-//                print("Successfully retrieved \(objects!.count) scores.")
-//                // Do something with the found objects
-//                if let objects = objects {
-//                    for object in objects {
-//                        print(object.objectId)
-//                    }
-//                }
-//            } else {
-//                // Log details of the failure
-//                print("Error: \(error!) \(error!.userInfo)")
-//            }
-//        } as! ([PFObject]?, Error?) -> Void
+        var query = PFQuery(className:"Message")
+        query.includeKey("text")
+        //query.whereKey("text", equalTo:"Sean Plott")
+        query.findObjectsInBackground(){
+        //query.findObjectsInBackgroundWithBlock {
+            (objects: [PFObject]?, error: Error?) -> Void in
+            
+            if error == nil {
+                // The find succeeded.
+                
+                self.messages = objects!
+                self.tableView.reloadData()
+                print("Successfully retrieved \(objects!.count) scores.")
+                // Do something with the found objects
+                if let objects = objects {
+                    for object in objects {
+                        print(object.objectId)
+                    }
+                }
+            } else {
+                // Log details of the failure
+                print("Error: \(error!) \(error!.localizedDescription)")
+            }
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -70,5 +74,22 @@ class ChatViewController: UIViewController {
             }
         }
         
+    }
+}
+
+extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        return messages.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TextCell")
+        
+        cell?.textLabel?.text = messages[indexPath.row]
+        
+        return cell!
     }
 }
