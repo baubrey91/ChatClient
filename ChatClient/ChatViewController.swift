@@ -30,9 +30,7 @@ class ChatViewController: UIViewController {
         var query = PFQuery(className:"Message")
         query.includeKey("text")
         query.addDescendingOrder("createdAt")
-        //query.whereKey("text", equalTo:"Sean Plott")
         query.findObjectsInBackground(){
-        //query.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: Error?) -> Void in
             
             if error == nil {
@@ -59,6 +57,7 @@ class ChatViewController: UIViewController {
         
         let message = PFObject(className:"Message")
         message["text"] = chatTextField.text
+        message["user"] = PFUser.current()
         message.saveInBackground {
             (success: Bool, error: Error?) -> Void in
             if (success) {
@@ -85,7 +84,9 @@ extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TextCell")
         
         cell?.textLabel?.text = messages[indexPath.row]["text"] as! String
-        
+        if let user = messages[indexPath.row]["user"] as? String{
+            cell?.detailTextLabel?.text = user
+        }
         return cell!
     }
 }
