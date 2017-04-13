@@ -24,6 +24,7 @@ class ChatViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+        //this is my change
     }
     
     @IBAction func sendChat(_ sender: Any) {
@@ -36,9 +37,7 @@ class ChatViewController: UIViewController {
                 print("save")
                 // The object has been saved.
             } else {
-                
-                print("save")
-
+                print("not saved")
                 // There was a problem, check error.description
             }
         }
