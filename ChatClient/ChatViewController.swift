@@ -29,6 +29,7 @@ class ChatViewController: UIViewController {
         
         var query = PFQuery(className:"Message")
         query.includeKey("text")
+        query.addDescendingOrder("createdAt")
         //query.whereKey("text", equalTo:"Sean Plott")
         query.findObjectsInBackground(){
         //query.findObjectsInBackgroundWithBlock {
@@ -39,13 +40,8 @@ class ChatViewController: UIViewController {
                 
                 self.messages = objects!
                 self.tableView.reloadData()
-                print("Successfully retrieved \(objects!.count) scores.")
-                // Do something with the found objects
-                if let objects = objects {
-                    for object in objects {
-                        print(object.objectId)
-                    }
-                }
+
+
             } else {
                 // Log details of the failure
                 print("Error: \(error!) \(error!.localizedDescription)")
@@ -88,7 +84,7 @@ extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "TextCell")
         
-        cell?.textLabel?.text = messages[indexPath.row]
+        cell?.textLabel?.text = messages[indexPath.row]["text"] as! String
         
         return cell!
     }
