@@ -17,8 +17,36 @@ class ChatViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(ChatViewController.onTimer), userInfo: nil, repeats: true)
+
 
         // Do any additional setup after loading the view.
+    }
+    
+    func onTimer() {
+        
+//        var query = PFQuery(className:"Message")
+//        query.includeKey("text")
+//        //query.whereKey("text", equalTo:"Sean Plott")
+//        query.findObjectsInBackground {
+//        //query.findObjectsInBackgroundWithBlock {
+//            (objects: [PFObject]?, error: NSError?) -> Void in
+//            
+//            if error == nil {
+//                // The find succeeded.
+//                print("Successfully retrieved \(objects!.count) scores.")
+//                // Do something with the found objects
+//                if let objects = objects {
+//                    for object in objects {
+//                        print(object.objectId)
+//                    }
+//                }
+//            } else {
+//                // Log details of the failure
+//                print("Error: \(error!) \(error!.userInfo)")
+//            }
+//        } as! ([PFObject]?, Error?) -> Void
     }
 
     override func didReceiveMemoryWarning() {
@@ -29,7 +57,7 @@ class ChatViewController: UIViewController {
     
     @IBAction func sendChat(_ sender: Any) {
         
-        var message = PFObject(className:"Message")
+        let message = PFObject(className:"Message")
         message["text"] = chatTextField.text
         message.saveInBackground {
             (success: Bool, error: Error?) -> Void in
@@ -41,7 +69,6 @@ class ChatViewController: UIViewController {
                 // There was a problem, check error.description
             }
         }
-        
         
     }
 }

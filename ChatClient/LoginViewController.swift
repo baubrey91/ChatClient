@@ -12,6 +12,7 @@ import Parse
 class LoginViewController: UIViewController {
     
     
+    @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
 
@@ -28,13 +29,13 @@ class LoginViewController: UIViewController {
     
     @IBAction func loginAction(_ sender: Any) {
         
-        let username = "test"
-        let password = passwordTextField.text
-        let email = emailTextField.text
+        let username = "test"//usernameTextField.text
+        let password = "test"//passwordTextField.text
+        let email = "test@gmail.com"//emailTextField.text
         // other fields can be set just like with PFObject
         //user["phone"] = "415-392-0202"
         
-        PFUser.logInWithUsername(inBackground: username, password: password!){
+        PFUser.logInWithUsername(inBackground: username, password: password){
             (succeeded, error) -> Void in
             if let error = error {
                 //let errorString = error.userInfo["error"] as? NSString
