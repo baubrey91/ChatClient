@@ -28,14 +28,13 @@ class LoginViewController: UIViewController {
     
     @IBAction func loginAction(_ sender: Any) {
         
-        var user = PFUser()
-        user.username = "myUsername"
-        user.password = passwordTextField.text
-        user.email = emailTextField.text
+        let username = "test"
+        let password = passwordTextField.text
+        let email = emailTextField.text
         // other fields can be set just like with PFObject
         //user["phone"] = "415-392-0202"
         
-        user.signUpInBackground {
+        PFUser.logInWithUsername(inBackground: username, password: password!){
             (succeeded, error) -> Void in
             if let error = error {
                 //let errorString = error.userInfo["error"] as? NSString
@@ -44,6 +43,8 @@ class LoginViewController: UIViewController {
                 // Show the errorString somewhere and let the user try again.
             } else {
                 print("logged in")
+                
+                self.performSegue(withIdentifier: "loginSegue", sender: nil)
 
                 // Hooray! Let them use the app now.
             }
@@ -52,8 +53,56 @@ class LoginViewController: UIViewController {
     
     
     @IBAction func signupAction(_ sender: Any) {
+        let user = PFUser()
         
+        user.username = "test"
+        user.email = emailTextField.text
+        user.password = passwordTextField.text
+        user.signUpInBackground { [unowned self] succeeded, error in
+            guard succeeded == true else {
+                print(error?.localizedDescription)
+                self.showErrorView(error)
+                return
+            }
+            print("sucess")
+            // Successful registration, display the wall
+            //self.performSegue(withIdentifier: Segue.tableViewWallSegue, sender: nil)
+        }
     }
+    
+    func showErrorView(_ error: Error?) {
+        guard let error = error as? NSError, let errorMessage = error.userInfo["error"] as? String else {
+            return
+        }
+        
+        let alertController = UIAlertController(title: NSLocalizedString("Error", comment: ""),
+                                                message: errorMessage,
+                                                preferredStyle: .alert)
+        
+        alertController.addAction(UIAlertAction(title: NSLocalizedString("Dismiss", comment: ""),
+                                                style: .default))
+        
+        present(alertController, animated: true)
+    }
+
+    
+    /*func myMethod() {
+        var user = PFUser()
+        user.username = "myUsername"
+        user.password = "myPassword"
+        user.email = "email@example.com"
+        // other fields can be set just like with PFObject
+        user["phone"] = "415-392-0202"
+        
+        user.signUpInBackgroundWithBlock {
+            (succeeded: Bool, error: NSError?) -> Void in
+            if let error = error {
+                let errorString = error.userInfo["error"] as? NSString
+                // Show the errorString somewhere and let the user try again.
+            } else {
+                // Hooray! Let them use the app now.
+            }
+        }*/
 
 }
 
